@@ -1,0 +1,26 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+coverage = "==7.4.0"
+iniconfig = "==2.0.0"
+mako = "==1.3.0"
+markupsafe = "==2.1.3"
+packaging = "==23.2"
+parse = "==1.20.0"
+parse-type = "==0.6.2"
+pluggy = "==1.3.0"
+pytest = "==7.4.4"
+pytest-bdd = "==7.0.1"
+pytest-cov = "*"
+six = "==1.16.0"
+typing-extensions = "==4.9.0"
+junit-report = "*"
+invoke = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.12"
