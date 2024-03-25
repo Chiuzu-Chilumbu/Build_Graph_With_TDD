@@ -1,6 +1,6 @@
 """Test steps for testing the Queue class with BDD"""
 
-from queue.queue_adt import Queue
+from data.queue_adt import Queue
 from pytest_bdd import scenario, given, when, then
 
 

@@ -1,7 +1,5 @@
 """Behavioral tests for stack abstract datatype"""
 
-from data.stack_adt import Stack
-
 import pytest
 from pytest_bdd import scenarios, given, when, then
 
@@ -10,8 +8,8 @@ scenarios('features/create_stack.feature')
 
 @pytest.fixture
 @given('a stack class exists')
-def stack_class():
-    return Stack
+def stack_class(new_stack):
+    return new_stack
 
 
 @pytest.fixture

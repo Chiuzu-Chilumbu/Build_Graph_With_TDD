@@ -1,7 +1,12 @@
 """unit tests to validate basic Queue operations"""
 
 import pytest
+from data.queue_adt import Queue
 
+def test_should_create_a_queue_object_from_queue_class(new_queue):
+    """a class called Queue."""
+    assert new_queue is not None
+    assert isinstance(new_queue, Queue)
 
 def test_queue_is_initially_empty(new_queue):
     """Test if a new queue is initially empty."""

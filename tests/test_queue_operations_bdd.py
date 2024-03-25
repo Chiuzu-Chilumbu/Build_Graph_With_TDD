@@ -1,7 +1,7 @@
 """Behavioural test to validate basic Queue operations"""
 import pytest
 from pytest_bdd import scenarios, given, when, then, parsers
-from queue.queue_adt import Queue
+from data.queue_adt import Queue
 
 # Load scenarios from the feature file
 scenarios('features/queue_operations.feature')
