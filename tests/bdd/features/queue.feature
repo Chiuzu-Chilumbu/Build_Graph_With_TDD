@@ -1,6 +1,11 @@
 # Feature file with description of queue operations
 
-Feature: Created Queue class must be able to perform the basic operations
+Feature: An instanciated Queue object must be able to perform basic queue operations
+
+  Scenario: A queue object should be created from the queue class
+    Given a class called Queue
+	  When an object is instantiated from the Queue class
+	  Then The object should be an instance of the queue class
 
   Scenario: The queue class should be able to enqueue data onto the created deque
     Given a new created queue object

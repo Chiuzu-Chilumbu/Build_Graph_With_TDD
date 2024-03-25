@@ -1,6 +1,11 @@
-"""Feature file to ensure stack operations"""
+#Feature file to ensure stack operations
 
 Feature: After having created the stack, we should be able to perform basic stack operations
+
+  Scenario: Create a stack object from a stack class
+    Given a stack class exists
+    When a stack object is instantiated with the stack capacity
+    Then the instantiated stack object should contain an empty list
 
   Scenario: the stack class object should be able to push data onto the created list
     Given a stack object with provided capacity
