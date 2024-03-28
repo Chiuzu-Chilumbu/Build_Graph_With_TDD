@@ -1,0 +1,54 @@
+name: Graph TDD
+
+on:
+  push:
+    branches: [ '**' ]  # Triggers on push to any branch
+  pull_request:
+    branches: [ '**' ]  # Triggers on pull requests to any branch
+
+permissions:
+  contents: write
+  checks: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2  # Correct the version tag for the checkout action
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.12'  # Specify the Python version
+
+      - name: Install Pipenv
+        run: pip install pipenv  # Install Pipenv without a preceding comment
+
+      - name: Install dependencies with pipenv
+        run: pipenv install --dev  # Install dependencies from Pipfile
+
+      - name: Run Tests with coverage
+        run: |
+          pipenv run pytest --verbose --cov=. --cov-report=xml --junitxml=junit.xml  # Remove unnecessary python3 -m and correct junit option
+
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v3
+        if: success() || failure()  # Publish the test report regardless of the test result
+        with:
+          report_paths: '**/junit.xml'
+          detailed_summary: true
+          include_passed: true
+
+  deploy:
+    needs: build  # The deploy job depends on the build job
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'  # Correct the syntax for the GitHub ref
+    steps:
+      - uses: actions/checkout@v2  # Checkout the code
+      - name: Deploy to Github pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}  # Use the GitHub token for authentication
+          publish_dir: ./reports  # Specify the directory that contains the files to publish
+
