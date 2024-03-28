@@ -30,7 +30,7 @@ jobs:
 
       - name: Run Tests with coverage
         run: |
-          pipenv run pytest --verbose --cov=. --cov-report=xml --junitxml=junit.xml  # Remove unnecessary python3 -m and correct junit option
+           pipenv run python3 -m pytest --verbose --cov=. --cov-report=xml --junitxml=junit.xml
 
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v3
