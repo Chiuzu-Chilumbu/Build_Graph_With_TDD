@@ -74,7 +74,6 @@ def push_data_to_full(new_stack):
 
 
 # Then Steps
-        
 @then('the instantiated stack object should contain an empty list')
 def stack_with_full_given_capacity(new_stack):
     """Test to check if the stack as 100 capacity as given"""
