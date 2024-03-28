@@ -4,7 +4,7 @@ from pytest_bdd import scenarios, given, when, then
 from data.queue_adt import Queue
 
 # Load scenarios from the feature file
-scenarios('../features/stack.feature')
+scenarios('../features/queue.feature')
 
 # Given Steps
 @given('a class called Queue')

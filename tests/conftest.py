@@ -14,5 +14,5 @@ def new_queue():
 @pytest.fixture(scope='function')
 def new_stack():
 	"""fixture to provide a new queue for each test"""
-	return Stack
+	return Stack(100)
 
