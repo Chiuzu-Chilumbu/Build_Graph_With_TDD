@@ -54,7 +54,7 @@ def queue_at_full_capacity(new_queue):
 
 # When Steps
 @when('an object is instantiated from the Queue class')
-def test_object_should_be_created_from_queue_class(new_queue):
+def the_object_should_be_created_from_queue_class(new_queue):
     """an object is instantiated from the Queue class."""
     assert new_queue is not None
 
@@ -91,7 +91,7 @@ def check_if_queue_is_Full(new_queue):
 
 # Then Steps
 @then('The object should be an instance of the queue class')
-def test_created_object_should_be_instance_of_queue_class(new_queue):
+def the_created_object_should_be_instance_of_queue_class(new_queue):
     """The object should be an instance of the queue class."""
     assert isinstance(new_queue, Queue)
 

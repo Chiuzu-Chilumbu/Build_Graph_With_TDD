@@ -30,16 +30,16 @@ def test_should_should_be_able_to_push_item_onto_stack_without_increasing_capaci
     new_stack.push(5)
     # Assert
     assert new_stack.size() == 1
-    assert new_stack.capacity == 100
+    assert new_stack.capacity == 5
 
 
 def test_should_raise_exception_if_pushed_data_exceeds_stack_capacity(new_stack):
     """should raise an exception if pushed data exceeds stack capacity"""
-    for i in range(100):
+    for i in range(1,6):
         new_stack.push(i)
         
     with pytest.raises(Exception):
-        new_stack.push(101)
+        new_stack.push(0)
 
 
 def test_should_pop_the_top_most_item_from_the_stack(new_stack):
@@ -60,7 +60,7 @@ def test_should_raise_an_exception_when_pop_operation_is_used_on_empty_list(new_
 
 def test_should_return_true_if_stack_is_full(new_stack):
     """should return True if the stack is full"""
-    for values in range(1, 101):
+    for values in range(1, 6):
         new_stack.push(values)
 
     # assert
@@ -69,7 +69,7 @@ def test_should_return_true_if_stack_is_full(new_stack):
 
 def test_should_return_false_if_the_stack_is_not_full(new_stack):
     """should return False if the stack is not full"""
-    for values in range(1, 100):
+    for values in range(1, 5):
         new_stack.push(values)
         
     assert new_stack.isFull() == False
