@@ -2,6 +2,10 @@
 
 from pytest_bdd import scenarios, given, when, then
 from data.queue_adt import Queue
+import pytest
+
+# pytest marker for 
+pytestmarker = pytest.mark.queue_bdd_test
 
 # Load scenarios from the feature file
 scenarios('../features/queue.feature')

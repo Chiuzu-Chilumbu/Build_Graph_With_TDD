@@ -3,6 +3,8 @@
 import pytest
 from pytest_bdd import scenarios, given, when, then
 
+# pytest marker for stack bdd tests
+pytestmarker = pytest.marker.stack_bdd_test
 
 # Scenarios
 scenarios('../features/stack.feature')

@@ -4,5 +4,5 @@ Feature: An instance of a Graph can be created and should be able to perform req
   
   Scenario: A Graph instance can be initialised from a class
     Given a graph class
-    When an object is intanciated
+    When an object is instantiated
     Then the graph should be created with an adjacency list representation

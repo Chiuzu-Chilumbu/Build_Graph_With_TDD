@@ -3,7 +3,8 @@
 from data.stack_adt import Stack
 import pytest
 
-
+# marker for stack unit tests
+pytestmark = pytest.mark.stack_unit_test
 
 def test_should_create_instance_of_stack_with_given_capacity():
     """Test to check if the stack object is created with the given capacity"""

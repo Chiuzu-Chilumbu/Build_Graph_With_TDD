@@ -3,6 +3,9 @@
 import pytest
 from data.queue_adt import Queue
 
+# marker for queue unit tests
+pytestmark = pytest.mark.queue_unit_test
+
 def test_should_create_a_queue_object_from_queue_class(new_queue):
     """a class called Queue."""
     assert new_queue is not None
