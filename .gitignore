@@ -1,0 +1,11 @@
+# .gitignore content
+
+# Ignore settings of Visual Studio Code
+.vscode/
+
+# Ignore all .pyc files
+*.pyc
+
+# Ignore all __pycache__ directories
+__pycache__/
+
