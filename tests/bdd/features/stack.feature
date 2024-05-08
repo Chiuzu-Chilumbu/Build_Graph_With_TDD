@@ -1,4 +1,4 @@
-#Feature file to ensure stack operations
+#Feature file with description of stack operations
 
 Feature: After having created the stack, we should be able to perform basic stack operations
 

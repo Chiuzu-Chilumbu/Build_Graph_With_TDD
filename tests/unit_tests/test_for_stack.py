@@ -1,4 +1,4 @@
-"""unit tests designed to test the basic operations of a stack abstract data type"""
+"""unit tests to validate basic Stack operations"""
 
 from data.stack_adt import Stack
 import pytest

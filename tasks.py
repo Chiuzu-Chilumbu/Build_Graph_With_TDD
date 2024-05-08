@@ -28,3 +28,5 @@ def reports(c):
     """
     with c.cd(project_root):
         c.run("python3 -m pytest --junitxml=reports/test-results.xml")
+
+

@@ -1,4 +1,4 @@
-"""Behavioral test to test the basic stack operations"""
+"""Behavioral steps to validate basic Stack operations"""
 
 import pytest
 from pytest_bdd import scenarios, given, when, then

@@ -1,4 +1,4 @@
-"""Behavioural test to validate basic Queue operations"""
+"""Behavioural steps to validate basic Queue operations"""
 
 from pytest_bdd import scenarios, given, when, then
 from data.queue_adt import Queue
