@@ -8,5 +8,5 @@ from collections import defaultdict
 pytestmarker = pytest.mark.graph_unit_test
 
 def test_graph_should_be_represented_by_adjacency_list(new_graph):
-    # Act, Arrange, Assert
-    assert new_graph.AdjList == type(defaultdict)
+    # Act, Arrange, Assert
+    assert isinstance(new_graph.adjList, defaultdict)
