@@ -19,6 +19,15 @@ six = "==1.16.0"
 typing-extensions = "==4.9.0"
 junit-report = "*"
 invoke = "*"
+flask = "*"
+flask-socketio = "*"
+eventlet = "*"
+flask-cors = "*"
+werkzeug = "*"
+selenium = "*"
+python-dotenv = "*"
+black = "*"
+flake8 = "*"
 
 [dev-packages]
 

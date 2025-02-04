@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stack Visualization</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.3/axios.min.js"></script>
+    <style>
+        /* Existing styles from your code */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Stack Visualization</h1>
+        
+        <div class="controls">
+            <div class="input-group">
+                <label for="capacity">Stack Capacity:</label>
+                <input type="number" id="capacity" min="1" max="10" value="5">
+                <button onclick="initializeStack()">Initialize Stack</button>
+            </div>
+            
+            <div class="input-group">
+                <input type="text" id="stack-input" placeholder="Enter value">
+                <button onclick="pushToStack()" id="pushBtn">Push</button>
+                <button onclick="popFromStack()" id="popBtn">Pop</button>
+            </div>
+        </div>
+
+        <div class="stack" id="stack-container">
+            <!-- Stack items will be dynamically injected here -->
+        </div>
+        
+        <div id="status" class="status"></div>
+    </div>
+
+    <script>
+        let stackCapacity = 5;
+
+        async function initializeStack() {
+            const capacityInput = document.getElementById('capacity');
+            stackCapacity = parseInt(capacityInput.value);
+
+            if (isNaN(stackCapacity) || stackCapacity <= 0) {
+                showStatus('Invalid capacity. Please enter a positive number.', 'error');
+                return;
+            }
+
+            try {
+                await axios.post('/initialise', { capacity: stackCapacity }); // Fix route name
+                showStatus('Stack initialized successfully!', 'success');
+                fetchStackData();
+            } catch (error) {
+                showStatus(error.response?.data?.message || 'Error initializing stack', 'error');
+            }
+        }
+
+        async function fetchStackData() {
+            try {
+                const response = await axios.get('/stack/data');
+                updateStackVisualization(response.data.result);
+                updateButtons();
+            } catch (error) {
+                showStatus('Error fetching stack data', 'error');
+            }
+        }
+
+        async function pushToStack() {
+            const input = document.getElementById('stack-input');
+            const value = input.value.trim();
+
+            if (!value) {
+                showStatus('Please enter a value', 'error');
+                return;
+            }
+
+            try {
+                await axios.post('/stack/push', { data: value });
+                input.value = '';
+                fetchStackData();
+            } catch (error) {
+                showStatus(error.response?.data?.message || 'Error pushing to stack', 'error');
+            }
+        }
+
+        async function popFromStack() {
+            try {
+                const response = await axios.post('/stack/pop');
+                fetchStackData();
+                const poppedValue = response.data?.result || 'unknown value'; // Updated to handle backend response
+                showStatus(`Popped: ${poppedValue}`, 'success');
+            } catch (error) {
+                showStatus(error.response?.data?.message || 'Error popping from stack', 'error');
+            }
+        }
+
+        function updateStackVisualization(stackData) {
+            const stackContainer = document.getElementById('stack-container');
+            stackContainer.innerHTML = '';
+            
+            stackData.forEach((item) => {
+                const div = document.createElement('div');
+                div.classList.add('stack-item', 'push'); // Add animation class dynamically
+                div.textContent = item;
+                stackContainer.appendChild(div);
+
+                setTimeout(() => div.classList.remove('push'), 500); // Remove animation class after 500ms
+            });
+        }
+
+        function updateButtons() {
+            const pushBtn = document.getElementById('pushBtn');
+            const popBtn = document.getElementById('popBtn');
+            const stackContainer = document.getElementById('stack-container');
+            const currentSize = stackContainer.children.length;
+
+            pushBtn.disabled = currentSize >= stackCapacity;
+            popBtn.disabled = currentSize === 0;
+        }
+
+        function showStatus(message, type) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+            setTimeout(() => {
+                status.textContent = '';
+                status.className = 'status';
+            }, 3000);
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeStack();
+        });
+    </script>
+</body>
+</html>
