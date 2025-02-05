@@ -1,6 +1,6 @@
 """unit tests to validate basic Stack operations"""
 
-from data.stack_adt import Stack
+from app.models.stack_adt import Stack
 import pytest
 
 # marker for stack unit tests

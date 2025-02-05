@@ -1,7 +1,7 @@
 """Behavioural steps to validate basic Queue operations"""
 
 from pytest_bdd import scenarios, given, when, then
-from data.queue_adt import Queue
+from app.models.queue_adt import Queue
 import pytest
 
 # pytest marker for 

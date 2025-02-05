@@ -1,9 +1,11 @@
 """conftest file that holds all needed pytest fixtures"""
 
 import pytest
-from data.queue_adt import Queue
-from data.stack_adt import Stack
-from data.graph_adt import Graph
+from app.models.queue_adt import Queue
+from app.models.stack_adt import Stack
+from app.models.graph_adt import Graph
+
+
 
 @pytest.fixture(scope='function')
 def new_queue():
@@ -11,11 +13,11 @@ def new_queue():
 	return Queue(5)
 
 
-
 @pytest.fixture(scope='function')
 def new_stack():
 	"""fixture to provide a new queue for each test"""
 	return Stack(5)
+
 
 @pytest.fixture(scope='function')
 def new_graph():

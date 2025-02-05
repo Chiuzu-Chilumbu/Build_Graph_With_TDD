@@ -1,6 +1,6 @@
 """unit tests to validate basic Graph operations"""
 
-from data.graph_adt import Graph
+from app.models.graph_adt import Graph
 import pytest
 from collections import defaultdict
 

@@ -1,7 +1,7 @@
 """unit tests to validate basic Queue operations"""
 
 import pytest
-from data.queue_adt import Queue
+from app.models.queue_adt import Queue
 
 # marker for queue unit tests
 pytestmark = pytest.mark.queue_unit_test
