@@ -1,0 +1,50 @@
+name: Flask Heroku CI/CD
+
+on:
+  push:
+    branches:
+      - main  
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Step 2: Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.12'
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: |
+          pip install pipenv
+          pipenv install --dev
+
+      # Step 4: Run tests
+      - name: Run tests
+        run: |
+          pipenv run pytest --verbose --cov=. --cov-report=xml --junitxml=junit.xml
+
+      # Step 5: Deploy to Heroku
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Heroku CLI
+        run: |
+          curl https://cli-assets.heroku.com/install.sh | sh
+
+      - name: Deploy to Heroku
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: |
+          heroku git:remote -a build-graph-with-tdd
+          git push heroku main
