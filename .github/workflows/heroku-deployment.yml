@@ -45,6 +45,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with: 
+          fetch-depth: 0  # Ensures full history is fetched (unshallow)
       
       - name: Install Heroku CLI
         run: |
@@ -61,4 +63,5 @@ jobs:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: |
           heroku git:remote -a build-graph-with-tdd
+          git fetch --all --unshallow  # Unshallow the repository before pushing
           git push https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/build-graph-with-tdd.git HEAD:main
