@@ -2,9 +2,9 @@ name: Graph TDD
 
 on:
   push:
-    branches: [ '**' ]  # Triggers on push to any branch
+    branches: ['**']  # Triggers on push to any branch
   pull_request:
-    branches: [ '**' ]  # Triggers on pull requests to any branch
+    branches: ['**']  # Triggers on pull requests to any branch
 
 permissions:
   contents: write
@@ -13,25 +13,24 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v2  # Correct the version tag for the checkout action
-
+      - uses: actions/checkout@v2
+      
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.12'  # Specify the Python version
-
+          python-version: '3.12'
+      
       - name: Install Pipenv
-        run: pip install pipenv  # Install Pipenv without a preceding comment
-
+        run: pip install pipenv
+      
       - name: Install dependencies with pipenv
-        run: pipenv install --dev  # Install dependencies from Pipfile
-
+        run: pipenv install --dev
+      
       - name: Run Tests with coverage
         run: |
-           pipenv run python3 -m pytest --verbose --cov=. --cov-report=xml --junitxml=junit.xml
-
+          pipenv run python3 -m pytest --verbose --cov=. --cov-report=xml --junitxml=junit.xml
+      
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v3
         if: success() || failure()  # Publish the test report regardless of the test result
@@ -40,22 +39,26 @@ jobs:
           detailed_summary: true
           include_passed: true
 
-      # Step 5: Deploy to Heroku
   deploy:
     needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
+      
       - name: Install Heroku CLI
         run: |
           curl https://cli-assets.heroku.com/install.sh | sh
-
+      
+      - name: Set up Heroku authentication
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: |
+          heroku auth:token
+      
       - name: Deploy to Heroku
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: |
           heroku git:remote -a build-graph-with-tdd
-          git push heroku main
-
+          git push https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/build-graph-with-tdd.git HEAD:main
