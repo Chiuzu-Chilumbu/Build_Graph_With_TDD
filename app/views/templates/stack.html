@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stack Visualization</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.3/axios.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: linear-gradient(135deg, #ffafbd, #ffc3a0);
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            margin: 20px auto;
+            max-width: 600px;
+            text-align: center;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .controls {
+            margin: 20px 0;
+        }
+        .input-group {
+            margin: 10px 0;
+        }
+        input, button {
+            padding: 10px 15px;
+            margin: 0 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .stack-container {
+            margin: 20px auto;
+            position: relative;
+            height: 300px;
+            width: 200px;
+            border: 3px solid #333;
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: center;
+            justify-content: space-evenly;
+        }
+        .stack-slot {
+            width: 80%;
+            height: 50px;
+            border: 2px dashed #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f5f5f5;
+        }
+        .stack-item {
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        .status {
+            margin: 20px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .error {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        .success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Stack Visualization</h1>
+
+        <div class="controls">
+            <div class="input-group">
+                <label for="capacity">Stack Capacity:</label>
+                <input type="number" id="capacity" min="1" max="10" value="5">
+                <button onclick="initializeStack()">Initialize Stack</button>
+            </div>
+
+            <div class="input-group">
+                <input type="text" id="stack-input" placeholder="Enter value">
+                <button onclick="pushToStack()">Push</button>
+                <button onclick="popFromStack()">Pop</button>
+            </div>
+        </div>
+
+        <div class="stack-container" id="stack-container">
+            <!-- Stack slots will be dynamically rendered here -->
+        </div>
+
+        <div id="status" class="status"></div>
+    </div>
+
+    <script>
+        let stackCapacity = 5;
+
+        function initializeStack() {
+            const capacityInput = document.getElementById('capacity');
+            stackCapacity = parseInt(capacityInput.value);
+
+            if (isNaN(stackCapacity) || stackCapacity <= 0) {
+                showStatus('Invalid capacity. Please enter a positive number.', 'error');
+                return;
+            }
+
+            axios.post('/initialise', { capacity: stackCapacity })
+                .then(() => {
+                    showStatus('Stack initialized successfully!', 'success');
+                    renderStackVisualization([]);
+                })
+                .catch((error) => {
+                    showStatus(error.response?.data?.message || 'Error initializing stack', 'error');
+                });
+        }
+
+        function pushToStack() {
+            const input = document.getElementById('stack-input').value.trim();
+            if (!input) {
+                showStatus('Please enter a value.', 'error');
+                return;
+            }
+
+            axios.post('/stack/push', { data: input })
+                .then(() => {
+                    fetchStackData();
+                })
+                .catch((error) => {
+                    showStatus(error.response?.data?.message || 'Error pushing to stack', 'error');
+                });
+        }
+
+        function popFromStack() {
+            axios.post('/stack/pop')
+                .then(() => {
+                    fetchStackData();
+                })
+                .catch((error) => {
+                    showStatus(error.response?.data?.message || 'Error popping from stack', 'error');
+                });
+        }
+
+        function fetchStackData() {
+            axios.get('/stack/data')
+                .then((response) => {
+                    renderStackVisualization(response.data.result);
+                })
+                .catch(() => {
+                    showStatus('Error fetching stack data.', 'error');
+                });
+        }
+
+        function renderStackVisualization(stackData) {
+            const stackContainer = document.getElementById('stack-container');
+            stackContainer.innerHTML = '';
+
+            for (let i = 0; i < stackCapacity; i++) {
+                const slot = document.createElement('div');
+                slot.classList.add('stack-slot');
+
+                if (stackData[i]) {
+                    const item = document.createElement('div');
+                    item.classList.add('stack-item');
+                    item.textContent = stackData[i];
+                    slot.appendChild(item);
+                }
+
+                stackContainer.appendChild(slot);
+            }
+        }
+
+        function showStatus(message, type) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+            setTimeout(() => {
+                status.textContent = '';
+                status.className = 'status';
+            }, 3000);
+        }
+
+        // Initialize stack on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeStack();
+        });
+    </script>
+</body>
+</html>

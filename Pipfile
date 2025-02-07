@@ -28,6 +28,7 @@ selenium = "*"
 python-dotenv = "*"
 black = "*"
 flake8 = "*"
+gunicorn = "*"
 
 [dev-packages]
 

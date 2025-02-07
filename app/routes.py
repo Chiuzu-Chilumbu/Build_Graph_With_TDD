@@ -3,10 +3,23 @@ from app.controllers.stack_logic import StackController
 
 stack_controller = None  # Global variable to hold the stack controller instance
 
+
 def register_routes(app):
-    @app.route('/')
-    def index():
-        return render_template('index.html')
+    @app.route("/")
+    def home():
+        return render_template('home.html')
+
+    @app.route('/stack')
+    def stack():
+        return render_template('stack.html')
+
+    @app.route('/queue')
+    def queue():
+        return render_template('queue.html')
+
+    @app.route('/graph')
+    def graph():
+        return render_template('graph.html')
 
     @app.route('/initialise', methods=['POST'])
     def initialise_stack():

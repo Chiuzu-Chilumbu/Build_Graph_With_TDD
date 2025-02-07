@@ -30,3 +30,12 @@ def reports(c):
         c.run("python3 -m pytest --junitxml=reports/test-results.xml")
 
 
+
+@task
+def app(c):
+    """
+    Run the web application
+    """
+    with c.cd(project_root):
+        c.run("Python3 run.py")
+
