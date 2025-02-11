@@ -47,3 +47,6 @@ class Queue:
         if self.isEmpty():
             raise Exception('Queue is empty')
         return self.queue[0]
+    
+    def get_queue(self):
+        return self.queue.copy()
