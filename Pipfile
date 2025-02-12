@@ -29,6 +29,7 @@ python-dotenv = "*"
 black = "*"
 flake8 = "*"
 gunicorn = "*"
+webdriver-manager = "*"
 
 [dev-packages]
 
