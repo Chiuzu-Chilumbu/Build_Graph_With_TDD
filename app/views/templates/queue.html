@@ -119,9 +119,13 @@
         function initializeQueue() {
             queueCapacity = parseInt(document.getElementById('capacity').value);
             axios.post('/queue/initialise', { capacity: queueCapacity })
-                .then(() => fetchQueueData())
+                .then((response) => {
+                    showStatus('Queue initialized successfully!');  // ✅ Show status message
+                    fetchQueueData();  // ✅ Refresh queue UI
+                })
                 .catch((error) => showStatus(error.response?.data?.message || 'Error initializing queue'));
         }
+
 
         function enqueue() {
             const value = document.getElementById('queue-input').value.trim();
