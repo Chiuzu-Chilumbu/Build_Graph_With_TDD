@@ -23,17 +23,17 @@ class Graph:
     def bfs(self, start, queue_capacity=10):
         """Breadth-First Search using the Queue ADT"""
         if start not in self.adjList:
-            return []  # ✅ Ensure function always returns a valid list
+            return []  
 
         queue = Queue(queue_capacity)
         queue.enqueue(start)
         visited = set([start])
-        traversal = []  # ✅ This is what needs to be returned
+        traversal = []  
 
         while not queue.isEmpty():
-            node = queue.dequeue()  # ✅ Ensure dequeue() returns a value
+            node = queue.dequeue()  
             if node is None:
-                continue  # Skip if queue returns None
+                continue  
 
             traversal.append(node)
 
@@ -42,27 +42,23 @@ class Graph:
                     visited.add(neighbor)
                     queue.enqueue(neighbor)
 
-        return traversal  # ✅ Ensure traversal is returned
+        return traversal 
 
 
     def dfs(self, start, stack_capacity=10):
         """Depth-First Search using the Stack ADT"""
         if start not in self.adjList:
             return []
-
         stack = Stack(stack_capacity)
         stack.push(start)
         visited = set([start])
         traversal = []
-
         while not stack.isEmpty():
             node = stack.pop()
             traversal.append(node)
 
-            # ✅ Reverse neighbors to maintain correct DFS order
-            for neighbor in sorted(self.adjList[node], reverse=True):  
+            for neighbor in sorted(self.adjList[node]):
                 if neighbor not in visited:
                     visited.add(neighbor)
                     stack.push(neighbor)
-
         return traversal
