@@ -1,14 +1,8 @@
-import pytest 
-from tests.acceptance_tests.pages.stack_page import StackPage
+import pytest
 from selenium.webdriver.support.ui import WebDriverWait
+from tests.acceptance_tests.pages.stack_page import StackPage
 
 pytestmark = pytest.mark.stack_acceptance_test
-
-@pytest.fixture(scope="module")
-def stack_page(driver):
-    """navigate to Stack page and return StackPage Object"""
-    driver.get("http://127.0.0.1:5001/stack")
-    return StackPage(driver)
 
 
 def test_initialize_stack(stack_page):
@@ -40,6 +34,8 @@ def test_stack_full_state(driver):
     assert "Stack is full" in stack_page.get_status_message()
 
 
+# TODO: Fix pop from stack tests
+
 # def test_pop_from_stack(driver):
 #     """Test popping items from the stack"""
 #     stack_page = StackPage(driver)
@@ -55,7 +51,7 @@ def test_stack_full_state(driver):
 #     assert len(stack_page.get_stack_items()) == 4  # One less item
 
 
-# TODO: start seperate test sessions for push and pop
+
 # def test_pop_empty_stack(driver):
 #     """Test Popping fom an empty stack"""
 #     stack_page = StackPage(driver)
