@@ -43,14 +43,13 @@ class StackPage:
 
     
     def pop_item(self):
-        """Click the pop button and wait for the stack to update"""
+        """Click the pop button and update stack items"""
         pop_button = self.driver.find_element(*self.POP_BUTTON)
         pop_button.click()
 
-        # ✅ WAIT FOR THE STACK TO UPDATE
-        WebDriverWait(self.driver, 5).until(
-            EC.staleness_of(pop_button)  # Wait until the old button reference is stale
-        )
+        # ✅ Fetch fresh data after pop without waiting
+        print(f"DEBUG (AFTER POP CLICK): Stack items found: {self.get_stack_items()}")
+
 
     
     def is_pop_button_enabled(self):
@@ -59,15 +58,17 @@ class StackPage:
 
     def is_push_button_enabled(self):
         return self.driver.find_element(*self.PUSH_BUTTON).is_enabled()
-
     
+
 
     def get_stack_items(self):
         """Returns the list of items currently in the stack visualization"""
         stack_items = self.driver.find_elements(By.CLASS_NAME, "stack-item")
-
-        # ✅ Ensure we fetch fresh data from the DOM
         items = [item.text for item in stack_items]
-        print(f"DEBUG: Stack items found: {items}")  # Debugging Output
 
+        print(f"DEBUG: Stack items found: {items}")  # Debugging Output
         return items
+
+
+
+

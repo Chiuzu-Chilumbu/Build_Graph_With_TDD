@@ -34,30 +34,33 @@ def test_stack_full_state(driver):
     assert "Stack is full" in stack_page.get_status_message()
 
 
-# TODO: Fix pop from stack tests
 
-# def test_pop_from_stack(driver):
-#     """Test popping items from the stack"""
-#     stack_page = StackPage(driver)
+def test_pop_from_stack(driver):
+    """Test popping items from the stack"""
+    stack_page = StackPage(driver)
+    stack_page.set_stack_capacity(5)
 
-#     for i in range(5):  # Push until full
-#         stack_page.push_item(str(i))
+    # ✅ Push an item
+    stack_page.push_item(42)
+    initial_items = stack_page.get_stack_items()
+    assert "42" in initial_items
 
-#     stack_page.pop_item()
+    # ✅ Pop the item
+    stack_page.pop_item()
 
-#     # ✅ WAIT FOR THE STACK TO UPDATE BEFORE ASSERTING
-#     WebDriverWait(driver, 5).until(lambda d: len(stack_page.get_stack_items()) == 4)
+    final_items = stack_page.get_stack_items()
+    
+    assert len(final_items) == len(initial_items) - 1
+    assert "42" not in final_items
 
-#     assert len(stack_page.get_stack_items()) == 4  # One less item
 
 
+def test_pop_empty_stack(driver):
+    """Test Popping fom an empty stack"""
+    stack_page = StackPage(driver)
 
-# def test_pop_empty_stack(driver):
-#     """Test Popping fom an empty stack"""
-#     stack_page = StackPage(driver)
+    for _ in range(4):  # Empty the stack
+        stack_page.pop_item()
 
-#     for _ in range(4):  # Empty the stack
-#         stack_page.pop_item()
-
-#     stack_page.pop_item()
-#     assert "Cannot pop from empty stack" in stack_page.get_status_message()
+    stack_page.pop_item()
+    assert "Cannot pop from empty stack" in stack_page.get_status_message()
