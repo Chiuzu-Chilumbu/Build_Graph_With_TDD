@@ -39,6 +39,14 @@ def quality_stack_acceptance(c):
 
 
 @task
+def quality_integration(c):
+    """
+    Run integration tests
+    """
+    with c.cd(project_root):
+        c.run("python3 -m pytest -m graph_integration_test -vv")
+
+@task
 def quality_queue_acceptance(c):
     """
     Run Stack Acceptance (UI) Tests.
