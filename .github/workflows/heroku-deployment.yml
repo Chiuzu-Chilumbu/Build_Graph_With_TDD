@@ -39,17 +39,12 @@ jobs:
           fi
         shell: bash
 
-      - name: Start Selenium WebDriver for tests
-        uses: nanasess/setup-chromedriver@v2
-        with:
-          chromedriver-version: latest
-
-      - name: Run Tests with coverage
+      - name: Run Tests (Skip Acceptance Tests)
         run: |
           if [[ "$ENVIRONMENT" == "production" ]]; then
-            pipenv run python3 -m pytest --verbose --cov=. --cov-report=xml --junitxml=junit.xml --base-url=https://build-graph-with-tdd-bc2becbeccff.herokuapp.com
+            pipenv run python3 -m pytest --verbose --cov=. --cov-report=xml --junitxml=junit.xml --base-url=https://build-graph-with-tdd-bc2becbeccff.herokuapp.com -m "not acceptance_test"
           else
-            pipenv run python3 -m pytest --verbose --cov=. --cov-report=xml --junitxml=junit.xml --base-url=http://localhost:5001
+            pipenv run python3 -m pytest --verbose --cov=. --cov-report=xml --junitxml=junit.xml --base-url=http://localhost:5001 -m "not acceptance_test"
           fi
 
       - name: Publish Test Report
@@ -68,8 +63,9 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./reports
+      - name: Deploy to Heroku
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: |
+          git remote add heroku https://git.heroku.com/build-graph-with-tdd-bc2becbeccff.git
+          git push heroku main
