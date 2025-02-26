@@ -126,7 +126,7 @@
                 return;
             }
 
-            axios.post('/initialise', { capacity: stackCapacity })
+            axios.post('/stack/initialise', { capacity: stackCapacity })
                 .then(() => {
                     showStatus('Stack initialized successfully!', 'success');
                     renderStackVisualization([]);
