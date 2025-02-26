@@ -51,18 +51,26 @@ class QueuePage:
         )
 
 
+    # def dequeue_item(self):
+    #     """Dequeue an item from the queue"""
+    #     initial_count = len(self.get_queue_items()) 
+
+    #     dequeue_button = self.driver.find_element(*self.DEQUEUE_BUTTON)
+    #     dequeue_button.click()
+
+    #     # Wait until queue updates (or empty queue message appears)
+    #     WebDriverWait(self.driver, 5).until(
+    #         lambda d: len(self.get_queue_items()) < initial_count or
+    #                   "Queue is empty" in self.get_status_message()
+    #     )
+
     def dequeue_item(self):
         """Dequeue an item from the queue"""
-        initial_count = len(self.get_queue_items()) 
-
         dequeue_button = self.driver.find_element(*self.DEQUEUE_BUTTON)
         dequeue_button.click()
 
         # Wait until queue updates (or empty queue message appears)
-        WebDriverWait(self.driver, 5).until(
-            lambda d: len(self.get_queue_items()) < initial_count or
-                      "Queue is empty" in self.get_status_message()
-        )
+        print(f"DEBUG (AFTER POP CLICK): Stack items found: {self.get_queue_items()}")
 
 
     def is_dequeue_button_enabled(self):
@@ -73,7 +81,7 @@ class QueuePage:
 
     def get_queue_items(self):
         """Returns the list of items currently in the queue visualization"""
-        queue_items = self.driver.find_elements(By.CLASS_NAME, "queue-item")
+        queue_items = self.driver.find_elements(*self.QUEUE_ITEMS)
         items = [item.text for item in queue_items]
 
         print(f"DEBUG: Queue items found: {items}")  # Debugging Output

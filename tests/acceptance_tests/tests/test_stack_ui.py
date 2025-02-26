@@ -1,5 +1,4 @@
 import pytest
-from selenium.webdriver.support.ui import WebDriverWait
 from tests.acceptance_tests.pages.stack_page import StackPage
 
 pytestmark = pytest.mark.stack_acceptance_test
