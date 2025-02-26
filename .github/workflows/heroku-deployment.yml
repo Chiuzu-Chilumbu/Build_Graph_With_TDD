@@ -2,9 +2,9 @@ name: Graph TDD
 
 on:
   push:
-    branches: [ '**' ]  # Triggers on push to any branch
+    branches: [ '**' ]
   pull_request:
-    branches: [ '**' ]  # Triggers on pull requests to any branch
+    branches: [ '**' ]
 
 permissions:
   contents: write
@@ -13,6 +13,10 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    env:  # ✅ Set global environment variables
+      ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'production' || 'development' }}
+      BASE_URL: ${{ github.ref == 'refs/heads/main' && 'https://build-graph-with-tdd-bc2becbeccff.herokuapp.com' || 'http://localhost:5001' }}
 
     steps:
       - name: Check out repository
@@ -29,36 +33,15 @@ jobs:
       - name: Install dependencies
         run: pipenv install --dev
 
-      # ✅ Set environment variable for Dev/Prod
-      - name: Set environment mode
-        run: |
-          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-            echo "ENVIRONMENT=production" >> $GITHUB_ENV
-          else
-            echo "ENVIRONMENT=development" >> $GITHUB_ENV
-          fi
-        shell: bash
-
       - name: Run Tests (Skip Acceptance Tests)
-        run: |
-          if [[ "$ENVIRONMENT" == "production" ]]; then
-            pipenv run python3 -m pytest --verbose --cov=. --cov-report=xml --junitxml=junit.xml --base-url=https://build-graph-with-tdd-bc2becbeccff.herokuapp.com -m "not acceptance_test"
-          else
-            pipenv run python3 -m pytest --verbose --cov=. --cov-report=xml --junitxml=junit.xml --base-url=http://localhost:5001 -m "not acceptance_test"
-          fi
-
-      - name: Publish Test Report
-        uses: mikepenz/action-junit-report@v3
-        if: success() || failure()
-        with:
-          report_paths: '**/junit.xml'
-          detailed_summary: true
-          include_passed: true
+        run: pipenv run python3 -m pytest --verbose --cov=. --cov-report=xml --junitxml=junit.xml -m "not acceptance_test"
+        env:
+          BASE_URL: ${{ env.BASE_URL }}  # ✅ Pass environment variable
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'  # Deploy only on the main branch
+    if: github.ref == 'refs/heads/main'
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
