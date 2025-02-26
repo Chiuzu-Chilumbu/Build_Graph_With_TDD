@@ -58,6 +58,7 @@ def test_pop_from_stack(driver):
 def test_pop_empty_stack(driver):
     """Test Popping fom an empty stack"""
     stack_page = StackPage(driver)
+    stack_page.set_stack_capacity(5)
 
     for _ in range(4):  # Empty the stack
         stack_page.pop_item()

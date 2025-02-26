@@ -52,13 +52,16 @@ class QueuePage:
 
 
     def dequeue_item(self):
-        """Dequeue an item form the queue"""
+        """Dequeue an item from the queue"""
+        initial_count = len(self.get_queue_items()) 
+
         dequeue_button = self.driver.find_element(*self.DEQUEUE_BUTTON)
         dequeue_button.click()
 
-        # Wait for queue to update
+        # Wait until queue updates (or empty queue message appears)
         WebDriverWait(self.driver, 5).until(
-            EC.staleness_of(dequeue_button) # wait until the old button reference is stale
+            lambda d: len(self.get_queue_items()) < initial_count or
+                      "Queue is empty" in self.get_status_message()
         )
 
 
@@ -70,8 +73,8 @@ class QueuePage:
 
     def get_queue_items(self):
         """Returns the list of items currently in the queue visualization"""
-        queue_items = self.driver.find_elements(*self.QUEUE_ITEMS)
-
-        # Ensure we fetch fresh data from the DOM
+        queue_items = self.driver.find_elements(By.CLASS_NAME, "queue-item")
         items = [item.text for item in queue_items]
+
+        print(f"DEBUG: Queue items found: {items}")  # Debugging Output
         return items
