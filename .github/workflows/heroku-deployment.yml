@@ -48,14 +48,22 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'  # Deploy only on the main branch
+  
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
-
+  
+      - name: Install Heroku CLI
+        run: curl https://cli-assets.heroku.com/install.sh | sh
+  
+      - name: Authenticate with Heroku
+        run: echo ${{ secrets.HEROKU_API_KEY }} | heroku auth:token
+  
+      - name: Add Heroku Remote
+        run: heroku git:remote -a build-graph-with-tdd-bc2becbeccff
+  
       - name: Deploy to Heroku
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: |
-          git remote add heroku https://git.heroku.com/build-graph-with-tdd-bc2becbeccff.git
           git push heroku main
+
