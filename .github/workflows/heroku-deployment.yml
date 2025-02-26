@@ -14,7 +14,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    env:  # ✅ Set global environment variables
+    env:
       ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'production' || 'development' }}
       BASE_URL: ${{ github.ref == 'refs/heads/main' && 'https://build-graph-with-tdd-bc2becbeccff.herokuapp.com' || 'http://localhost:5001' }}
 
@@ -27,16 +27,23 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install Pipenv
-        run: pip install pipenv
+      - name: Install Pipenv and Invoke
+        run: |
+          pip install pipenv invoke
 
       - name: Install dependencies
         run: pipenv install --dev
 
-      - name: Run Tests (Skip Acceptance Tests)
-        run: pipenv run python3 -m pytest --verbose --cov=. --cov-report=xml --junitxml=junit.xml -m "not acceptance_test"
-        env:
-          BASE_URL: ${{ env.BASE_URL }}  # ✅ Pass environment variable
+      - name: Run Unit and Integration Tests (Skip Acceptance)
+        run: pipenv run invoke test  # ✅ Calls the Invoke task
+
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v3
+        if: success() || failure()
+        with:
+          report_paths: '**/junit.xml'
+          detailed_summary: true
+          include_passed: true
 
   deploy:
     needs: build
