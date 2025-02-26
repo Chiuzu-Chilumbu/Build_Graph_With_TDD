@@ -1,16 +1,16 @@
 from flask import Flask
 from app.routes import register_routes
-from app.config import config
+from app.config import Config
 
 def create_app():
     app = Flask(__name__, template_folder='app/views/templates')
-    app.config.from_object(config)
+    app.config.from_object(Config)
     register_routes(app)
     return app
 
-# ✅ Move this line outside the `if __name__ == '__main__'` block
+
 app = create_app()
 
 if __name__ == '__main__':
-    app = create_app()
-    app.run(host="0.0.0.0", port=5001, debug=True)
+    print(f"Running in {app.config['ENVIRONMENT']} mode")
+    app.run(host="0.0.0.0", port=5001, debug=app.config["DEBUG"])

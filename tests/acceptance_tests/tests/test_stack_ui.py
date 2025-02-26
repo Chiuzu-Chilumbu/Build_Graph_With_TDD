@@ -27,10 +27,10 @@ def test_stack_full_state(driver):
     for i in range(5):  # Push until full
         stack_page.push_item(i)
 
-    # ✅ Attempt one more push beyond capacity
+    #  Attempt one more push beyond capacity
     stack_page.push_item(6)
 
-    # ✅ Assert we get the expected "Stack is full" message
+    # Assert we get the expected "Stack is full" message
     assert "Stack is full" in stack_page.get_status_message()
 
 
@@ -40,12 +40,12 @@ def test_pop_from_stack(driver):
     stack_page = StackPage(driver)
     stack_page.set_stack_capacity(5)
 
-    # ✅ Push an item
+    # Push an item
     stack_page.push_item(42)
     initial_items = stack_page.get_stack_items()
     assert "42" in initial_items
 
-    # ✅ Pop the item
+    # Pop the item
     stack_page.pop_item()
 
     final_items = stack_page.get_stack_items()

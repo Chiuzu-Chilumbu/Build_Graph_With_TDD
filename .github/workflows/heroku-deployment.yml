@@ -2,9 +2,9 @@ name: Graph TDD
 
 on:
   push:
-    branches: ['**']  # Triggers on push to any branch
+    branches: [ '**' ]  # Triggers on push to any branch
   pull_request:
-    branches: ['**']  # Triggers on pull requests to any branch
+    branches: [ '**' ]  # Triggers on pull requests to any branch
 
 permissions:
   contents: write
@@ -13,27 +13,48 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
-      
+      - name: Check out repository
+        uses: actions/checkout@v3
+
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: '3.12'
-      
+
       - name: Install Pipenv
         run: pip install pipenv
-      
-      - name: Install dependencies with pipenv
+
+      - name: Install dependencies
         run: pipenv install --dev
-      
+
+      # ✅ Set environment variable for Dev/Prod
+      - name: Set environment mode
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "ENVIRONMENT=production" >> $GITHUB_ENV
+          else
+            echo "ENVIRONMENT=development" >> $GITHUB_ENV
+          fi
+        shell: bash
+
+      - name: Start Selenium WebDriver for tests
+        uses: nanasess/setup-chromedriver@v2
+        with:
+          chromedriver-version: latest
+
       - name: Run Tests with coverage
         run: |
-          pipenv run python3 -m pytest --verbose --cov=. --cov-report=xml --junitxml=junit.xml
-      
+          if [[ "$ENVIRONMENT" == "production" ]]; then
+            pipenv run python3 -m pytest --verbose --cov=. --cov-report=xml --junitxml=junit.xml --base-url=https://build-graph-with-tdd-bc2becbeccff.herokuapp.com
+          else
+            pipenv run python3 -m pytest --verbose --cov=. --cov-report=xml --junitxml=junit.xml --base-url=http://localhost:5001
+          fi
+
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v3
-        if: success() || failure()  # Publish the test report regardless of the test result
+        if: success() || failure()
         with:
           report_paths: '**/junit.xml'
           detailed_summary: true
@@ -42,25 +63,13 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'  # Deploy only on the main branch
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with: 
-          fetch-depth: 0  # Ensures full history is fetched (unshallow)
-      
-      - name: Install Heroku CLI
-        run: |
-          curl https://cli-assets.heroku.com/install.sh | sh
-      
-      - name: Set up Heroku authentication
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: |
-          heroku auth:token
-      
-      - name: Deploy to Heroku
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: |
-           heroku git:remote -a build-graph-with-tdd
-           git push https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/build-graph-with-tdd.git HEAD:main
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./reports

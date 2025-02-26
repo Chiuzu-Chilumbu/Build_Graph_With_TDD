@@ -1,6 +1,7 @@
 """conftest file that holds all needed pytest fixtures"""
 
 import pytest
+from app.config import Config
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
@@ -11,50 +12,40 @@ from app.models.stack_adt import Stack
 from app.models.graph_adt import Graph
 
 
+# Base URL Fixture
+# @pytest.fixture(scope="session")
+# def base_url():
+#     """Return the correct base URL depending on the environment"""
+#     environment = os.getenv("ENVIRONMENT", "development")  # Defaults to "development"
+#     if environment == "production":
+#         return "https://your-heroku-app.herokuapp.com"  # Replace with your Heroku app URL
+#     return "http://localhost:5001"  # Default to local testing
+
+
+
+@pytest.fixture(scope="session")
+def base_url():
+    """Return the correct base URL depending on the environment"""
+    return Config.BASE_URL  # Use the BASE_URL from Flask config
+
+
+# Fixtures for Queue, Stack, and Graph
 @pytest.fixture(scope='function')
 def new_queue():
-	"""fixture to provide a new queue for each test"""
+	"""Fixture to provide a new queue for each test"""
 	return Queue(5)
-
 
 @pytest.fixture(scope='function')
 def new_stack():
-	"""fixture to provide a new queue for each test"""
+	"""Fixture to provide a new stack for each test"""
 	return Stack(5)
-
 
 @pytest.fixture(scope='function')
 def new_graph():
-	"""ficture to provde a new graph for each test"""
+	"""Fixture to provide a new graph for each test"""
 	return Graph()
 
-
-@pytest.fixture(scope="module")
-def driver():
-	"""set up webdriver for chromme (Reusable for all tests)"""
-	service = Service(ChromeDriverManager().install())
-	driver = webdriver.Chrome(service=service)
-	yield driver
-	driver.quit()
-	
-
-@pytest.fixture(scope="module")
-def stack_page(driver):
-    """navigate to Stack page and return StackPage Object"""
-    driver.get("http://127.0.0.1:5001/stack")
-    return StackPage(driver)
-
-
-
-@pytest.fixture(scope="module")
-def queue_page(driver):
-    """Navigate to Queue page and return QueuePage object"""
-    driver.get("http://127.0.0.1:5001/queue")
-    return QueuePage(driver)
-
-
-
-@pytest.fixture
+@pytest.fixture(scope="function")
 def sample_graph():
     """Fixture to create a sample graph for traversal tests"""
     graph = Graph()
@@ -67,3 +58,27 @@ def sample_graph():
     graph.add_edge("B", "D")
     graph.add_edge("C", "D")
     return graph
+
+
+# WebDriver Fixture (Selenium)
+@pytest.fixture(scope="module")
+def driver():
+	"""Set up WebDriver for Chrome (Reusable for all tests)"""
+	service = Service(ChromeDriverManager().install())
+	driver = webdriver.Chrome(service=service)
+	yield driver
+	driver.quit()
+
+
+# StackPage & QueuePage Fixtures Using `base_url`
+@pytest.fixture(scope="module")
+def stack_page(driver, base_url):
+    """Navigate to Stack page and return StackPage Object"""
+    driver.get(f"{base_url}/stack")  # Uses base_url dynamically
+    return StackPage(driver)
+
+@pytest.fixture(scope="module")
+def queue_page(driver, base_url):
+    """Navigate to Queue page and return QueuePage Object"""
+    driver.get(f"{base_url}/queue")  # Uses base_url dynamically
+    return QueuePage(driver)
