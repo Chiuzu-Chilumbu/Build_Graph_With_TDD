@@ -110,3 +110,9 @@ def app(c):
     """
     with c.cd(project_root):
         c.run("python3 run.py")
+
+
+@task
+def test(c):
+    """Run all tests except acceptance tests"""
+    c.run("python3 -m pytest --verbose --cov=. --cov-report=xml --junitxml=junit.xml -m 'not (stack_acceptance_test or queue_acceptance_test or graph_acceptance_test)'", pty=True)
