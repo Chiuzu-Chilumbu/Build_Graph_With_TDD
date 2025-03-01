@@ -1,40 +1,68 @@
-# Graph Data Structure with TDD, BDD, and CI/CD Visualization: The Final Chapter
+# **Graph Data Structure with TDD, BDD, UI Testing, and CI/CD Visualization**
 
-## Project Overview
+## **📌 Project Overview**  
 
-This project represents the conclusion of an exploratory series into Test-Driven Development (TDD) and Behavior-Driven Development (BDD) with Python data structures, focusing on the implementation of a Graph Data Structure. Building upon the foundational knowledge established in my previous projects on [Queue](https://github.com/Chiuzu-Chilumbu/Build_Queue_With_TDD) and [Stack](https://github.com/Chiuzu-Chilumbu/Build_Stack_With_TDD), this final project aims to deepen the understanding of graph theory and its practical applications. Through TDD and BDD methodologies, this endeavour not only challenges but also enhances problem-solving skills with complex data structures, emphasizing graph traversals such as Breadth-First Search (BFS) and Depth-First Search (DFS), among others. A standout feature is the CI/CD pipeline integration for automated testing and deployment, and the innovative addition of graph visualizations to verify the structure and operations of graphs dynamically and intuitively.
+This project is a **comprehensive exploration of Test-Driven Development (TDD), Behavior-Driven Development (BDD), and UI automation testing** while implementing a **Graph Data Structure with Stack and Queue support**.  
 
-## Development Approach
+It builds on foundational projects for [Queue](https://github.com/Chiuzu-Chilumbu/Build_Queue_With_TDD) and [Stack](https://github.com/Chiuzu-Chilumbu/Build_Stack_With_TDD), culminating in a **full-stack graph visualization system** with **Selenium UI tests** and **automated deployment using GitHub Actions and Heroku**.
 
-### Test-Driven Development (TDD)
+### **🚀 Key Features**  
+✅ **Graph, Stack & Queue Implementation** – Developed using TDD with unit tests for core operations.  
+✅ **Graph Traversal (BFS & DFS)** – Implemented using **Stacks (DFS) and Queues (BFS)**.  
+✅ **Selenium-Based UI Testing** – **Page Object Model (POM)** ensures **maintainable** and **scalable UI automation**.  
+✅ **BDD with pytest-bdd** – Feature files describe graph behaviors (e.g., pathfinding, cycle detection).  
+✅ **Graph Visualization** – Displays **graph structure and traversal algorithms in real-time**.  
+✅ **CI/CD Integration** – Automated **testing, deployment to Heroku, and visualization updates**.  
 
-- **Unit Testing**: Began with writing unit tests for fundamental graph operations, including node insertion, edge creation, and property checks (e.g., acyclic properties for trees).
-- **Traversal Algorithms**: Developed tests for traversal algorithms ensuring coverage for various graph types, including directed, undirected, weighted, and unweighted graphs.
+---
 
-### Behavior-Driven Development (BDD)
+## **🛠 Development Approach**
 
-- Utilized `pytest-bdd` to define feature files for user-centric behaviours, including finding shortest paths, detecting cycles, and conducting connectivity checks between nodes. These feature files translate complex graph behaviours into readable scenarios for non-technical readers.
+### **1️⃣ Test-Driven Development (TDD)**
+TDD is used to **incrementally build and refine** Graph, Stack, and Queue operations:  
+🔹 **Graph Operations** – Nodes, edges, directed & undirected graphs, weighted graphs.  
+🔹 **Stack & Queue Support** – Used for **Graph Traversals (BFS & DFS)**.  
+🔹 **Unit Testing with pytest** – Ensures correctness of all graph operations.  
 
-## CI/CD Pipeline with Visualization
+### **2️⃣ Behavior-Driven Development (BDD)**
+BDD makes **Graph behavior readable** for both developers and stakeholders:  
+✔ **Feature Files** – Written using **Gherkin syntax** (`.feature` files).  
+✔ **pytest-bdd Step Definitions** – Automates user scenarios (e.g., **finding shortest paths, detecting cycles**).  
 
-- **Continuous Integration**: Set up GitHub Actions to automate testing for every commit, ensuring all graph operations and traversals work as expected.
-- **Continuous Deployment**: Automated deployment of graph visualizations to GitHub Pages, showcasing the dynamic construction and traversal of graphs as code changes.
-- **Visualization Tool Integration**: Incorporated tools like Graphviz for generating visual representations of graphs, seamlessly integrated within the CI/CD pipeline for real-time feedback on graph structures and algorithm behaviours.
+### **3️⃣ UI Testing with Selenium**
+To verify **Graph, Stack, and Queue UI**, we implemented:  
+✔ **Page Object Model (POM)** – Keeps test logic structured and **reusable**.  
+✔ **Selenium Tests** – Automates **push/pop (Stack), enqueue/dequeue (Queue), and Graph UI interactions**.  
+✔ **Handling Stale Elements** – Explicit waits (`WebDriverWait`) prevent flaky tests.  
 
-## Real-World Applications
+### **4️⃣ Continuous Integration & Deployment (CI/CD)**
+💡 **GitHub Actions Pipeline** automates:  
+✅ **Unit & BDD Tests** – Run on every commit.  
+✅ **Selenium UI Tests** – Currently **excluded due to headless browser limitations**.  
+✅ **Deployment** – Automatically **deploys Graph visualization to Heroku**.  
 
-Graph data structures are instrumental in numerous fields such as computer networks, social network analysis, geographic information systems (GIS), and more. By understanding and manipulating graphs, we can solve complex problems like routing algorithms, recommendation systems, and network connectivity.
+---
 
-## Conclusion
+## **🎯 Real-World Applications**
+Graphs power **critical applications** in various domains:  
+🔹 **Networking** – Routing algorithms (e.g., **Dijkstra’s shortest path**).  
+🔹 **Social Media** – Friend recommendations via **Graph Traversal**.  
+🔹 **Web Crawling** – DFS/BFS for indexing search engines.  
+🔹 **AI & Robotics** – Pathfinding in **autonomous navigation**.  
 
-This Graph Data Structure project marks not just the conclusion of a series but a testament to the power of systematic testing and development practices in software engineering. It embodies how foundational concepts in computer science can be explored, understood, and mastered through deliberate practice and continuous integration and delivery. As the final chapter in this series, it paves the way for future explorations into the vast sea of data structures and algorithms, always with an eye towards quality, reliability, and the never-ending pursuit of knowledge.
+---
 
-## Contributing
+## **🔗 Deployment**
+The project is **deployed to Heroku**, where Graph visualizations are automatically updated.  
 
-Contributions are welcome! If you have suggestions to improve this project, feel free to fork the repo, create a pull request, or open an issue.
+✅ **Live App URL:** [https://build-graph-with-tdd.herokuapp.com](https://build-graph-with-tdd.herokuapp.com)  
 
-## Acknowledgments
+---
 
-- Special thanks to open-source projects that inspired graph visualization techniques.
-- Gratitude to the Python and testing communities for their invaluable resources and support.
+## **📜 Acknowledgments**
+- Inspired by **data structure implementations in Python**.  
+- Special thanks to the **testing and open-source communities**.  
 
+---
+
+🔥 **This project shows the importance of starting small and building more complex software using systematic testing, structured automation, and continuous deployment.** Let’s keep building! 🚀
