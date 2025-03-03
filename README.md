@@ -55,7 +55,7 @@ Graphs power **critical applications** in various domains:
 ## **🔗 Deployment**
 The project is **deployed to Heroku**, where Graph visualizations are automatically updated.  
 
-✅ **Live App URL:** [https://build-graph-with-tdd.herokuapp.com](https://build-graph-with-tdd.herokuapp.com)  
+✅ **Live App URL:** [https://build-graph-with-tdd.herokuapp.com](https://build-graph-with-tdd-bc2becbeccff.herokuapp.com)  
 
 ---
 
