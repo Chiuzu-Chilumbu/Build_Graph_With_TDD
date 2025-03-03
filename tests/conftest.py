@@ -70,13 +70,15 @@ def driver():
 	driver.quit()
 
 
-# StackPage & QueuePage Fixtures Using `base_url`
+# StackPage Fixtures Using `base_url`
 @pytest.fixture(scope="module")
 def stack_page(driver, base_url):
     """Navigate to Stack page and return StackPage Object"""
     driver.get(f"{base_url}/stack")  # Uses base_url dynamically
     return StackPage(driver)
 
+
+# QueuePage Fixtures Using `base_url
 @pytest.fixture(scope="module")
 def queue_page(driver, base_url):
     """Navigate to Queue page and return QueuePage Object"""

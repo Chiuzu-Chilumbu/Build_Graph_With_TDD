@@ -62,3 +62,10 @@ class Graph:
                     visited.add(neighbor)
                     stack.push(neighbor)
         return traversal
+
+
+
+if __name__ == "__main__":
+    graph = Graph()
+    graph.add_edge("A", "B")
+    print(graph.adjList)
