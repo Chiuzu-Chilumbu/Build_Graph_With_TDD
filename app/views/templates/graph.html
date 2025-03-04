@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graph Visualization</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.3/axios.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: linear-gradient(135deg, #ffafbd, #ffc3a0);
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            margin: 20px auto;
+            max-width: 800px;
+            text-align: center;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .controls {
+            margin: 20px 0;
+        }
+        input, button {
+            padding: 10px 15px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        svg {
+            width: 100%;
+            height: 500px;
+            border: 2px solid black;
+            background-color: white;
+        }
+        .queue-container, .stack-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px auto;
+            min-height: 60px;
+        }
+        .queue-item, .stack-item {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 4px;
+            border: 2px solid black;
+            font-weight: bold;
+        }
+        .stack-container {
+            flex-direction: column-reverse;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Graph Visualization</h1>
+
+        <div class="controls">
+            <input type="text" id="vertex-input" placeholder="Enter Vertex">
+            <button onclick="addVertex()">Add Vertex</button>
+        </div>
+
+        <div class="controls">
+            <input type="text" id="vertex1" placeholder="Vertex 1">
+            <input type="text" id="vertex2" placeholder="Vertex 2">
+            <button onclick="addEdgeFromInputs()">Add Edge</button>
+        </div>
+
+        <div class="controls">
+            <button onclick="performBFS()">BFS</button>
+            <button onclick="performDFS()">DFS</button>
+        </div>
+
+        <svg id="graph-canvas"></svg>
+
+        <h3>Queue (for BFS)</h3>
+        <div class="queue-container" id="queue-container"></div>
+
+        <h3>Stack (for DFS)</h3>
+        <div class="stack-container" id="stack-container"></div>
+
+        <div id="status" class="status"></div>
+    </div>
+
+    <script>
+        let graphData = {}; 
+        let svg = d3.select("#graph-canvas");
+        let width = 800, height = 500;
+        let positions = {}; 
+
+        function addVertex() {
+            let vertex = document.getElementById('vertex-input').value.trim();
+            if (!vertex || graphData[vertex]) {
+                alert("Enter a valid, unique vertex!");
+                return;
+            }
+
+            axios.post('/graph/add_vertex', { vertex: vertex })
+                .then(response => {
+                    graphData = response.data.result;
+                    drawGraph();
+                })
+                .catch(error => showStatus("Error adding vertex"));
+
+            document.getElementById('vertex-input').value = "";
+        }
+
+        function addEdgeFromInputs() {
+            let v1 = document.getElementById('vertex1').value.trim();
+            let v2 = document.getElementById('vertex2').value.trim();
+
+            if (!v1 || !v2 || v1 === v2 || !graphData[v1] || !graphData[v2]) {
+                alert("Enter two valid existing vertices.");
+                return;
+            }
+
+            axios.post('/graph/add_edge', { v1, v2 })
+                .then(response => {
+                    graphData = response.data.result;
+                    drawGraph();
+                })
+                .catch(error => showStatus("Error adding edge"));
+
+            document.getElementById('vertex1').value = "";
+            document.getElementById('vertex2').value = "";
+        }
+
+        function drawGraph() {
+            svg.selectAll("*").remove();
+            let nodes = Object.keys(graphData);
+            let edges = [];
+            nodes.forEach(v => {
+                graphData[v].forEach(n => {
+                    if (!edges.some(edge => edge.includes(v) && edge.includes(n))) {
+                        edges.push([v, n]);
+                    }
+                });
+            });
+
+            let radius = Math.min(width, height) / 3;
+            nodes.forEach((node, i) => {
+                let angle = (i / nodes.length) * 2 * Math.PI;
+                positions[node] = {
+                    x: width / 2 + radius * Math.cos(angle),
+                    y: height / 2 + radius * Math.sin(angle)
+                };
+            });
+
+            edges.forEach(([v1, v2]) => {
+                svg.append("line")
+                    .attr("x1", positions[v1].x)
+                    .attr("y1", positions[v1].y)
+                    .attr("x2", positions[v2].x)
+                    .attr("y2", positions[v2].y)
+                    .attr("stroke", "black")
+                    .attr("stroke-width", 2);
+            });
+
+            nodes.forEach(vertex => {
+                svg.append("circle")
+                    .attr("cx", positions[vertex].x)
+                    .attr("cy", positions[vertex].y)
+                    .attr("r", 20)
+                    .attr("fill", "#4CAF50");
+
+                svg.append("text")
+                    .attr("x", positions[vertex].x)
+                    .attr("y", positions[vertex].y + 5)
+                    .attr("text-anchor", "middle")
+                    .attr("font-size", "16px")
+                    .attr("fill", "white")
+                    .text(vertex);
+            });
+        }
+
+        function performBFS() {
+            let startVertex = prompt("Enter start vertex for BFS:");
+            if (!startVertex || !graphData[startVertex]) {
+                alert("Invalid start vertex");
+                return;
+            }
+
+            axios.post('/graph/bfs', { start_vertex: startVertex })
+                .then(response => {
+                    showTraversal(response.data.traversal, "Queue");
+                })
+                .catch(error => showStatus("Error performing BFS"));
+        }
+
+        function performDFS() {
+            let startVertex = prompt("Enter start vertex for DFS:");
+            if (!startVertex || !graphData[startVertex]) {
+                alert("Invalid start vertex");
+                return;
+            }
+
+            axios.post('/graph/dfs', { start_vertex: startVertex })
+                .then(response => {
+                    showTraversal(response.data.traversal, "Stack");
+                })
+                .catch(error => showStatus("Error performing DFS"));
+        }
+
+        function showTraversal(traversal, type) {
+            let container = type === "Queue" ? document.getElementById('queue-container') : document.getElementById('stack-container');
+            container.innerHTML = "";
+
+            traversal.forEach((node, index) => {
+                setTimeout(() => {
+                    let element = document.createElement('div');
+                    element.classList.add(type.toLowerCase() + "-item");
+                    element.textContent = node;
+
+                    if (type === "Queue") {
+                        container.appendChild(element); 
+                    } else {
+                        container.prepend(element);
+                    }
+                }, index * 1000);
+            });
+        }
+
+        function showStatus(message) {
+            document.getElementById('status').textContent = message;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            axios.get('/graph/data')
+                .then(response => {
+                    graphData = response.data.result;
+                    drawGraph();
+                })
+                .catch(() => showStatus("Error fetching graph data"));
+        });
+    </script>
+</body>
+</html>
