@@ -25,8 +25,8 @@ class Queue:
         """Remove data from the queue"""
         if self.isEmpty():
             raise Exception('Queue is empty')
-        else:
-            self.queue.popleft()
+        
+        return self.queue.popleft()
 
     def size(self):
         return len(self.queue)

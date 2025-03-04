@@ -1,10 +1,12 @@
 from flask import request, render_template, jsonify
 from app.controllers.stack_logic import StackController
 from app.controllers.queue_logic import QueueController
+from app.controllers.graph_logic import GraphController
 
 
 stack_controller = None 
 queue_controller = None
+graph_controller = GraphController()
 
 def register_routes(app):
     @app.route("/")
@@ -140,5 +142,35 @@ def register_routes(app):
         return queue_controller.get_queue_data()
 
         
-    
-    
+
+    '''
+    Graph operstaions
+    '''
+    # ✅ Add Vertex Route
+    @app.route('/graph/add_vertex', methods=['POST'])
+    def add_vertex():
+        data = request.json
+        return graph_controller.add_vertex(data.get('vertex'))
+
+    # ✅ Add Edge Route
+    @app.route('/graph/add_edge', methods=['POST'])
+    def add_edge():
+        data = request.json
+        return graph_controller.add_edge(data.get('v1'), data.get('v2'))
+
+    # ✅ Get Graph Data Route
+    @app.route('/graph/data', methods=['GET'])
+    def get_graph_data():
+        return graph_controller.get_graph_data()
+
+    # ✅ BFS Route
+    @app.route('/graph/bfs', methods=['POST'])
+    def bfs_traversal():
+        data = request.json
+        return graph_controller.bfs_traversal(data.get('start_vertex'))
+
+    # ✅ DFS Route
+    @app.route('/graph/dfs', methods=['POST'])
+    def dfs_traversal():
+        data = request.json
+        return graph_controller.dfs_traversal(data.get('start_vertex'))
