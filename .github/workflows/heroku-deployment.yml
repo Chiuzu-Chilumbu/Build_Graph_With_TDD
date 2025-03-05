@@ -69,6 +69,6 @@ jobs:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: |
           heroku git:remote -a build-graph-with-tdd
-          git push https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/build-graph-with-tdd.git HEAD:main
-  
+          git push --force https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/build-graph-with-tdd.git HEAD:main
+
 
