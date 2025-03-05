@@ -7,6 +7,7 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from tests.acceptance_tests.pages.stack_page import StackPage
 from tests.acceptance_tests.pages.queue_page import QueuePage
+from tests.acceptance_tests.pages.graph_page import GraphPage
 from app.models.queue_adt import Queue
 from app.models.stack_adt import Stack
 from app.models.graph_adt import Graph
@@ -74,7 +75,7 @@ def driver():
 @pytest.fixture(scope="module")
 def stack_page(driver, base_url):
     """Navigate to Stack page and return StackPage Object"""
-    driver.get(f"{base_url}/stack")  # Uses base_url dynamically
+    driver.get(f"{base_url}/stack") 
     return StackPage(driver)
 
 
@@ -82,5 +83,22 @@ def stack_page(driver, base_url):
 @pytest.fixture(scope="module")
 def queue_page(driver, base_url):
     """Navigate to Queue page and return QueuePage Object"""
-    driver.get(f"{base_url}/queue")  # Uses base_url dynamically
+    driver.get(f"{base_url}/queue") 
     return QueuePage(driver)
+
+
+
+# GraphPage Fixtures Using `base_url
+@pytest.fixture(scope="module")
+def graph_page(driver, base_url):
+    """Navigate to Graph page and return GraphPage Object"""
+    driver.get(f"{base_url}/graph")  
+    return GraphPage(driver)
+
+
+@pytest.fixture(scope="module")
+def clear_graph(driver, base_url):
+    """Clears all vertices and edges before running a test."""
+    driver.get(f"{base_url}/graph")  # ✅ Reload the graph page
+    driver.execute_script("localStorage.clear();")  # ✅ Clear localStorage
+    driver.refresh()  # ✅ Refresh to apply changes

@@ -87,6 +87,15 @@ def quality_graph_bdd(c):
     with c.cd(project_root):
         c.run("python3 -m pytest -m graph_bdd_test -vv")
 
+
+@task
+def quality_graph_acceptance(c):
+    """
+    Run Graph Acceptance (UI) Tests.
+    """
+    with c.cd(project_root):
+        c.run("python3 -m pytest -m graph_acceptance_test -vv")
+
 @task
 def coverage(c):
     """

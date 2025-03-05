@@ -183,7 +183,8 @@
                     .attr("cx", positions[vertex].x)
                     .attr("cy", positions[vertex].y)
                     .attr("r", 20)
-                    .attr("fill", "#4CAF50");
+                    .attr("fill", "#4CAF50")
+                    .attr("data-id", vertex);
 
                 svg.append("text")
                     .attr("x", positions[vertex].x)
